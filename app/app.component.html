@@ -95,7 +95,10 @@
         [iconUrl]="icon"
         [latitude]="latLng[0]"
         [longitude]="latLng[1]"
+        (markerClick)="markerTwiceClicked($event, i)"
         (markerDblClick)="markerTwiceClicked($event, i)"
+        [markerDraggable]="true"
+        (dragEnd)="markerDragEnd($event, i)"
       >
         <agm-info-window>
           <strong *ngIf="showId; else showNames">{{ latLng[2] }}</strong>
@@ -126,6 +129,8 @@
         [fillOpacity]="0.5"
         [clickable]="false"
       >
+        <!-- [circleDraggable]="true"
+        (dragEnd)="markerDragEnd($event, i)" -->
       </agm-circle>
     </ng-container>
 

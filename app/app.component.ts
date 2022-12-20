@@ -186,8 +186,12 @@ export class AppComponent {
 
   markerTwiceClicked(event: any, index) {
     console.log('marker double click:', event, index);
+    this.blueLatLngs.splice(index, 1);
   }
-
+  markerDragEnd(event: any, index) {
+    this.blueLatLngs[index] = [event.coords.lat, event.coords.lng];
+  }
+  
   setMouseOver(index: any, infoWindow: any) {
     // console.log('setMouseOver');
     this.isVisibleMarker = !this.isVisibleMarker;
