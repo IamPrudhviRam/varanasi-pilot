@@ -4,6 +4,7 @@ import { blueLatLngs } from '../constants/blue-lat-lngs';
 import { yellowLatLngs } from '../constants/yellow-lat-lngs';
 import { orangeLatLngs } from '../constants/orange-lat-lngs';
 import { default as varanasiAllGeojsons } from '../constants/varanasi_all.json';
+import { LatLngBoundsLiteral } from '@agm/core';
 
 declare var google: any;
 
@@ -177,6 +178,14 @@ export class AppComponent {
 
   polygonClicked(event: any, index: any) {
     console.log('poly clicked:', event, index);
+    console.log('lat:', event.latLng.lat());
+    let arr = [event.latLng.lat(), event.latLng.lng()];
+    this.blueLatLngs.push(arr);
+    // console.log('blue lat lngs', this.blueLatLngs);
+  }
+
+  markerTwiceClicked(event: any, index) {
+    console.log('marker double click:', event, index);
   }
 
   setMouseOver(index: any, infoWindow: any) {
