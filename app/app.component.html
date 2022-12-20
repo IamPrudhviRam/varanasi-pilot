@@ -5,6 +5,9 @@
   <button (click)="hideTenKms()">Show 10 kms</button>
 </ng-template>
 &nbsp;
+<button (click)="exportToXls()">Export as xls</button>
+&nbsp;
+<label *ngIf="latLngText">Latlng: {{ latLngText }}</label>
 
 <!-- <button *ngIf="showId; else showIdTags" (click)="showIds()">Show Name's</button>
 <ng-template #showIdTags>
@@ -95,15 +98,14 @@
         [iconUrl]="icon"
         [latitude]="latLng[0]"
         [longitude]="latLng[1]"
-        (markerClick)="markerTwiceClicked($event, i)"
-        (markerDblClick)="markerTwiceClicked($event, i)"
+        (markerClick)="markerClicked($event, i)"
         [markerDraggable]="true"
         (dragEnd)="markerDragEnd($event, i)"
       >
         <agm-info-window>
-          <strong *ngIf="showId; else showNames">{{ latLng[2] }}</strong>
+          <strong *ngIf="showId; else showNames">{{ latLng[0] }}</strong>
           <ng-template #showNames>
-            <strong>{{ latLng[3] }},&nbsp;{{ latLng[4] }}</strong>
+            <strong>{{ latLng[0] }},&nbsp;{{ latLng[1] }}</strong>
           </ng-template>
         </agm-info-window>
       </agm-marker>

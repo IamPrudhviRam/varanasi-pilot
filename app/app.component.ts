@@ -31,6 +31,7 @@ export class AppComponent {
   lngCenter: number;
   StrokeColor: string = 'white';
   hoveredNo: number | null;
+  latLngText: string = '';
 
   blueLatLngs: any = blueLatLngs;
   yellowLatLngs: any = yellowLatLngs;
@@ -177,21 +178,27 @@ export class AppComponent {
   }
 
   polygonClicked(event: any, index: any) {
-    console.log('poly clicked:', event, index);
-    console.log('lat:', event.latLng.lat());
-    let arr = [event.latLng.lat(), event.latLng.lng()];
+    let lat = Number(Number(event.latLng.lat()).toFixed(6));
+    let lng = Number(Number(event.latLng.lng()).toFixed(6));
+    let arr = [lat, lng];
     this.blueLatLngs.push(arr);
-    // console.log('blue lat lngs', this.blueLatLngs);
   }
 
-  markerTwiceClicked(event: any, index) {
-    console.log('marker double click:', event, index);
+  markerClicked(event: any, index) {
+    console.log('marker click:', event, index);
     this.blueLatLngs.splice(index, 1);
   }
   markerDragEnd(event: any, index) {
-    this.blueLatLngs[index] = [event.coords.lat, event.coords.lng];
+    console.log('before drag:', this.blueLatLngs[index]);
+    console.log('actual:', event.coords.lat, event.coords.lng);
+    let lat = Number(Number(event.coords.lat).toFixed(6));
+    let lng = Number(Number(event.coords.lng).toFixed(6));
+    this.blueLatLngs[index] = [lat, lng];
+    console.log('after drag:', this.blueLatLngs[index]);
+    this.latLngText = '' + lat + ', ' + lng;
+    console.log('marker end text', this.latLngText);
   }
-  
+
   setMouseOver(index: any, infoWindow: any) {
     // console.log('setMouseOver');
     this.isVisibleMarker = !this.isVisibleMarker;
@@ -209,6 +216,26 @@ export class AppComponent {
     setTimeout(() => {
       infoWindow.close();
     });
+  }
+
+  exportToXls(): any {
+    let results = [];
+    let headers = [['Desired Lat Lngs'], ['Latitude', 'longitude']];
+    results = [...headers, ...this.blueLatLngs];
+    let csvString = '';
+    results.forEach((rowItem, rowIndex) => {
+      rowItem.forEach((colItem, colindex) => {
+        csvString += colItem + ',';
+      });
+      csvString += '\r\n';
+    });
+    csvString = 'data:application/csv,' + encodeURIComponent(csvString);
+    let x = document.createElement('A');
+    x.setAttribute('href', csvString);
+    let dateString = new Date().toLocaleString();
+    x.setAttribute('download', 'latlngs_' + dateString + '.csv');
+    document.body.appendChild(x);
+    x.click();
   }
 
   circleClicked(event: any) {
