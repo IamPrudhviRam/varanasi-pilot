@@ -50,6 +50,13 @@ export class AppComponent {
 
   hideTen: boolean = false;
   showId: boolean = true;
+  upIcon: any = {
+    url: 'https://img.icons8.com/material-outlined/9/ADADAD/up.png',
+    scaledSize: {
+      width: 1,
+      height: 9,
+    },
+  };
   icon: any = {
     // url: 'https://img.icons8.com/color/24/null/map-pin.png',
     // url: 'https://img.icons8.com/fluency/24/null/map-pin.png',
