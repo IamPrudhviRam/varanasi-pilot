@@ -6,10 +6,10 @@
 </ng-template>
 &nbsp;
 
-<button *ngIf="showId; else showIdTags" (click)="showIds()">Show Name's</button>
+<!-- <button *ngIf="showId; else showIdTags" (click)="showIds()">Show Name's</button>
 <ng-template #showIdTags>
   <button (click)="showIds()">Show Id's</button>
-</ng-template>
+</ng-template> -->
 <agm-map
   #agmMap
   [latitude]="latti"
@@ -19,17 +19,31 @@
   (mapReady)="mapReady($event)"
   (zoomChange)="zoomChange($event)"
 >
-<ng-container *ngFor="let path of allZonePaths; let i = index">
-  <agm-polygon [id]="'polygon' + i" [paths]="path" [strokeColor]="StrokeColor" [visible]="true" [strokeWeight]="2"
-    [fillColor]="hoveredNo == i ? 'white' : '#FFFFFF00'" (polyClick)="polygonClicked($event, i)"
-    (polyMouseOver)="setMouseOver(i, infoWindow)" (polyMouseOut)="setMouseOut(infoWindow)">
-  </agm-polygon>
+  <ng-container *ngFor="let path of allZonePaths; let i = index">
+    <agm-polygon
+      [id]="'polygon' + i"
+      [paths]="path"
+      [strokeColor]="StrokeColor"
+      [visible]="true"
+      [strokeWeight]="2"
+      [fillColor]="hoveredNo == i ? 'white' : '#FFFFFF00'"
+      (polyClick)="polygonClicked($event, i)"
+      (polyMouseOver)="setMouseOver(i, infoWindow)"
+      (polyMouseOut)="setMouseOut(infoWindow)"
+    >
+    </agm-polygon>
 
-  <agm-marker [latitude]="latCenter" [longitude]="lngCenter" [visible]="isVisibleMarker" [animation]="animation"
-    [markerClickable]="false" [agmFitBounds]="false">
-    <agm-info-window [disableAutoPan]="false" #infoWindow>
-      <span>{{ allTempProps[i][2] }}</span>
-    </agm-info-window>
-  </agm-marker>
-</ng-container>
+    <agm-marker
+      [latitude]="latCenter"
+      [longitude]="lngCenter"
+      [visible]="isVisibleMarker"
+      [animation]="animation"
+      [markerClickable]="false"
+      [agmFitBounds]="false"
+    >
+      <agm-info-window [disableAutoPan]="false" #infoWindow>
+        <span>{{ allTempProps[i][2] }}</span>
+      </agm-info-window>
+    </agm-marker>
+  </ng-container>
 </agm-map>
