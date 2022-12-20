@@ -25,7 +25,7 @@ export class AppComponent {
   allZonePaths: any[] = [];
   allTempProps: Array<any> = [];
   isVisibleMarker: boolean = false;
-  animation: any = 'BOUNCE';
+  animation: any = ''; //BOUNCE
   latCenter: number;
   lngCenter: number;
   StrokeColor: string = 'white';
