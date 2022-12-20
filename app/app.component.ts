@@ -75,9 +75,9 @@ export class AppComponent {
 
   ngOnInit(): void {
     this.createGeoPath();
-    console.log('all jsons:', this.allGeojsons);
-    console.log('all paths:', this.allZonePaths);
-    console.log('all centers:', this.allTempProps);
+    // console.log('all jsons:', this.allGeojsons);
+    // console.log('all paths:', this.allZonePaths);
+    // console.log('all centers:', this.allTempProps);
     // console.log('currentTempType', this.currentTempType);
   }
 
@@ -139,7 +139,7 @@ export class AppComponent {
   }
 
   zoomChange(zoom: any) {
-    console.log('zoom change:', zoom);
+    // console.log('zoom change:', zoom);
 
     let number = 24;
     if (zoom <= 8) {
@@ -185,22 +185,16 @@ export class AppComponent {
   }
 
   markerClicked(event: any, index) {
-    console.log('marker click:', event, index);
     this.blueLatLngs.splice(index, 1);
   }
   markerDragEnd(event: any, index) {
-    console.log('before drag:', this.blueLatLngs[index]);
-    console.log('actual:', event.coords.lat, event.coords.lng);
     let lat = Number(Number(event.coords.lat).toFixed(6));
     let lng = Number(Number(event.coords.lng).toFixed(6));
     this.blueLatLngs[index] = [lat, lng];
-    console.log('after drag:', this.blueLatLngs[index]);
     this.latLngText = '' + lat + ', ' + lng;
-    console.log('marker end text', this.latLngText);
   }
 
   setMouseOver(index: any, infoWindow: any) {
-    // console.log('setMouseOver');
     this.isVisibleMarker = !this.isVisibleMarker;
     this.hoveredNo = index;
     this.latCenter = this.allTempProps[index][1];
