@@ -4,7 +4,9 @@ import { blueLatLngs } from '../constants/blue-lat-lngs';
 import { yellowLatLngs } from '../constants/yellow-lat-lngs';
 import { orangeLatLngs } from '../constants/orange-lat-lngs';
 import { default as varanasiAllGeojsons } from '../constants/varanasi_all.json';
-import { LatLngBoundsLiteral } from '@agm/core';
+import { HttpClient } from '@angular/common/http';
+import { stringify } from '@angular/compiler/src/util';
+import { HttpParams } from '@angular/common/http';
 
 declare var google: any;
 
@@ -73,6 +75,8 @@ export class AppComponent {
     },
   };
 
+  constructor(private http: HttpClient) {}
+
   ngOnInit(): void {
     this.createGeoPath();
     // console.log('all jsons:', this.allGeojsons);
@@ -103,6 +107,47 @@ export class AppComponent {
     });
 
     map.fitBounds(bonds);
+  }
+
+  getAltitude(lat, lng, index?) {
+    // let endpoint = 'https://api.opentopodata.org/v1/aster30m?';
+    let endpoint = 'https://api.gpxz.io/v1/elevation/point?';
+
+    console.log('endpoint:', endpoint);
+    // const paramsObj = {
+    //   locations: lat.toString() + ',' + lng.toString(),
+    // };
+    const paramsObj = {
+      lat: lat,
+      lon: lng,
+      'api-key': 'ak_ypfSVhVk_0IuHuxox4ULyoBI1',
+    };
+    const searchParams = new URLSearchParams(paramsObj);
+
+    //https://api.opentopodata.org/v1/aster30m?
+    // fetch(endpoint + new URLSearchParams(paramsObj)).then((response) => {
+    //   console.log('response:', response);
+    // });
+
+    // fetch(endpoint + new URLSearchParams(paramsObj)).then((response) => {
+    //   console.log('response:', response);
+    // });
+    this.http.get(endpoint, { params: paramsObj }).subscribe((response) => {
+      console.log('response:', response['result']);
+      let lat = response['result'].lat;
+      let lng = response['result'].lon;
+      let altitude = response['result'].elevation;
+      let resolution = response['result'].resolution;
+      if (index && lat && lng && altitude) {
+        this.latLngText = '' + lat + ', ' + lng + ', ' + altitude;
+        let arr = [lat, lng, altitude, resolution];
+        this.blueLatLngs[index] = arr;
+      } else if (lat && lng && altitude) {
+        this.latLngText = '' + lat + ', ' + lng + ', ' + altitude;
+        let arr = [lat, lng, altitude, resolution];
+        this.blueLatLngs.push(arr);
+      }
+    });
   }
 
   flattenArray(arr: Array<any>): number {
@@ -180,18 +225,20 @@ export class AppComponent {
   polygonClicked(event: any, index: any) {
     let lat = Number(Number(event.latLng.lat()).toFixed(6));
     let lng = Number(Number(event.latLng.lng()).toFixed(6));
-    let arr = [lat, lng];
-    this.blueLatLngs.push(arr);
+
+    this.getAltitude(lat, lng);
   }
 
   markerClicked(event: any, index) {
     this.blueLatLngs.splice(index, 1);
   }
+
   markerDragEnd(event: any, index) {
     let lat = Number(Number(event.coords.lat).toFixed(6));
     let lng = Number(Number(event.coords.lng).toFixed(6));
-    this.blueLatLngs[index] = [lat, lng];
-    this.latLngText = '' + lat + ', ' + lng;
+    // this.blueLatLngs[index] = [lat, lng];
+    // this.latLngText = '' + lat + ', ' + lng;
+    this.getAltitude(lat, lng, index);
   }
 
   setMouseOver(index: any, infoWindow: any) {
@@ -214,7 +261,11 @@ export class AppComponent {
 
   exportToXls(): any {
     let results = [];
-    let headers = [['Desired Lat Lngs'], ['Latitude', 'longitude']];
+    let headers = [
+      ['Desired Lat Lngs'],
+      ['Latitude', 'longitude', 'Altitude', 'Resolution'],
+    ];
+    console.log('blue lat lngs:', this.blueLatLngs);
     results = [...headers, ...this.blueLatLngs];
     let csvString = '';
     results.forEach((rowItem, rowIndex) => {

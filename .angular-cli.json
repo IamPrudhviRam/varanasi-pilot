@@ -3,5 +3,8 @@
     {
       "styles": ["styles.css"]
     }
-  ]
+  ],
+  "compiler-options": {
+    "resolveJsonModule": true
+  }
 }
