@@ -93,49 +93,57 @@
     </ng-container>
 
     <!-- Blue Lat Lngs -->
-    <ng-container *ngFor="let latLng of blueLatLngs; let i = index">
-      <agm-marker
-        [iconUrl]="icon"
-        [latitude]="latLng[0]"
-        [longitude]="latLng[1]"
-        (markerClick)="markerClicked($event, i)"
-        (markerDblClick)="markerClicked($event, i)"
-        [markerDraggable]="true"
-        (dragEnd)="markerDragEnd($event, i)"
-      >
-        <agm-info-window>
-          <strong *ngIf="showId; else showNames">{{ latLng[0] }}</strong>
-          <ng-template #showNames>
-            <strong>{{ latLng[0] }},&nbsp;{{ latLng[1] }}</strong>
-          </ng-template>
-        </agm-info-window>
-      </agm-marker>
-      <agm-circle
-        [latitude]="latLng[0]"
-        [longitude]="latLng[1]"
-        [radius]="distanceInMeters"
-        [strokeWeight]="hideTen ? 0 : strokeWeight"
-        [strokeColor]="strokeBlue"
-        [fillColor]="circleBlue"
-        [fillOpacity]="0.7"
-        [clickable]="false"
-      >
-      </agm-circle>
-      <agm-circle
-        *ngIf="hideTen"
-        [latitude]="latLng[0]"
-        [longitude]="latLng[1]"
-        [radius]="10000"
-        [strokeWeight]="strokeWeight"
-        [strokeColor]="strokeBlue"
-        [fillColor]="circleBlue"
-        [fillOpacity]="0.5"
-        [clickable]="false"
-      >
-        <!-- [circleDraggable]="true"
+    <agm-polyline
+      [visible]="true"
+      [strokeWeight]="2"
+      [strokeColor]="strokeYellow"
+    >
+      <ng-container *ngFor="let latLng of blueLatLngs; let i = index">
+        <agm-marker
+          [iconUrl]="icon"
+          [latitude]="latLng[0]"
+          [longitude]="latLng[1]"
+          (markerClick)="markerClicked($event, i)"
+          (markerDblClick)="markerClicked($event, i)"
+          [markerDraggable]="true"
+          (dragEnd)="markerDragEnd($event, i)"
+        >
+          <agm-info-window>
+            <strong *ngIf="showId; else showNames">{{ latLng[0] }}</strong>
+            <ng-template #showNames>
+              <strong>{{ latLng[0] }},&nbsp;{{ latLng[1] }}</strong>
+            </ng-template>
+          </agm-info-window>
+        </agm-marker>
+        <agm-circle
+          [latitude]="latLng[0]"
+          [longitude]="latLng[1]"
+          [radius]="distanceInMeters"
+          [strokeWeight]="hideTen ? 0 : strokeWeight"
+          [strokeColor]="strokeBlue"
+          [fillColor]="circleBlue"
+          [fillOpacity]="0.7"
+          [clickable]="false"
+        >
+        </agm-circle>
+        <agm-circle
+          *ngIf="hideTen"
+          [latitude]="latLng[0]"
+          [longitude]="latLng[1]"
+          [radius]="10000"
+          [strokeWeight]="strokeWeight"
+          [strokeColor]="strokeBlue"
+          [fillColor]="circleBlue"
+          [fillOpacity]="0.5"
+          [clickable]="false"
+        >
+          <!-- [circleDraggable]="true"
         (dragEnd)="markerDragEnd($event, i)" -->
-      </agm-circle>
-    </ng-container>
+        </agm-circle>
+        <agm-polyline-point [latitude]="latLng[0]" [longitude]="latLng[1]">
+        </agm-polyline-point>
+      </ng-container>
+    </agm-polyline>
 
     <!-- Orange Lat Lngs -->
     <ng-container *ngFor="let latLng of orangeLatLngs; let i = index">
