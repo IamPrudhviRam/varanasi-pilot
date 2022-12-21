@@ -37,15 +37,15 @@
     </agm-polygon>
 
     <agm-marker
-      [iconUrl]="upIcon"
       [latitude]="latCenter"
       [longitude]="lngCenter"
+      [iconUrl]="upIcon"
       [visible]="isVisibleMarker"
       [animation]="animation"
       [markerClickable]="false"
       [agmFitBounds]="false"
     >
-      <agm-info-window [disableAutoPan]="false" #infoWindow>
+      <agm-info-window [disableAutoPan]="true" #infoWindow>
         <span>{{ allTempProps[i][2] }}</span>
       </agm-info-window>
     </agm-marker>
