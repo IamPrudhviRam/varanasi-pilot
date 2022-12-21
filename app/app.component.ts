@@ -124,15 +124,6 @@ export class AppComponent {
       'api-key': 'ak_ypfSVhVk_0IuHuxox4ULyoBI1',
     };
     const searchParams = new URLSearchParams(paramsObj);
-
-    //https://api.opentopodata.org/v1/aster30m?
-    // fetch(endpoint + new URLSearchParams(paramsObj)).then((response) => {
-    //   console.log('response:', response);
-    // });
-
-    // fetch(endpoint + new URLSearchParams(paramsObj)).then((response) => {
-    //   console.log('response:', response);
-    // });
     setTimeout(() => {
       this.http.get(endpoint, { params: paramsObj }).subscribe(
         (response) => {
@@ -241,8 +232,10 @@ export class AppComponent {
   polygonClicked(event: any, index: any) {
     let lat = Number(Number(event.latLng.lat()).toFixed(6));
     let lng = Number(Number(event.latLng.lng()).toFixed(6));
+    let arr = [lat, lng];
+    this.blueLatLngs.push(arr);
 
-    this.getAltitude(lat, lng);
+    // this.getAltitude(lat, lng);
   }
 
   markerClicked(event: any, index) {
@@ -252,9 +245,9 @@ export class AppComponent {
   markerDragEnd(event: any, index) {
     let lat = Number(Number(event.coords.lat).toFixed(6));
     let lng = Number(Number(event.coords.lng).toFixed(6));
-    // this.blueLatLngs[index] = [lat, lng];
-    // this.latLngText = '' + lat + ', ' + lng;
-    this.getAltitude(lat, lng, index);
+    this.blueLatLngs[index] = [lat, lng];
+    this.latLngText = '' + lat + ', ' + lng;
+    // this.getAltitude(lat, lng, index);
   }
 
   setMouseOver(index: any, infoWindow: any) {
