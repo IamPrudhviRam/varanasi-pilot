@@ -157,6 +157,50 @@ export class AppComponent {
     }, 1000);
   }
 
+  getMultipleAltitudes(latLngArr) {
+    let endpoint = 'https://api.gpxz.io/v1/elevation/points?';
+    // =46.66,14.03|46.60,14.15
+    let latLngStr = '';
+    latLngArr.map((item) => {
+      latLngStr += item[0] + ',' + item[1] + '|';
+    });
+    latLngStr.slice(0, -1);
+    const paramsObj = {
+      latlons: latLngStr,
+      'api-key': 'ak_ypfSVhVk_0IuHuxox4ULyoBI1',
+    };
+    // console.log('params obj:', paramsObj);
+    let required = [];
+    this.http.get(endpoint, { params: paramsObj }).subscribe((response) => {
+      // console.log('multi response:', response['results']);
+      response['results'].map((item) => {
+        let arrItem = [item.lat, item.lon, item.elevation, item.resolution];
+        required.push(arrItem);
+      });
+      // console.log('required:', required);
+      let results = [];
+      let headers = [
+        ['Desired Lat Lngs'],
+        ['Latitude', 'longitude', 'Altitude', 'Resolution'],
+      ];
+      results = [...headers, ...required];
+      let csvString = '';
+      results.forEach((rowItem, rowIndex) => {
+        rowItem.forEach((colItem, colindex) => {
+          csvString += colItem + ',';
+        });
+        csvString += '\r\n';
+      });
+      csvString = 'data:application/csv,' + encodeURIComponent(csvString);
+      let x = document.createElement('A');
+      x.setAttribute('href', csvString);
+      let dateString = new Date().toLocaleString();
+      x.setAttribute('download', 'latlngs_' + dateString + '.csv');
+      document.body.appendChild(x);
+      x.click();
+    });
+  }
+
   flattenArray(arr: Array<any>): number {
     let counterIndex: number = 0;
     while (arr.length == 1) {
@@ -269,27 +313,28 @@ export class AppComponent {
   }
 
   exportToXls(): any {
+    let resp = this.getMultipleAltitudes(this.blueLatLngs);
     let results = [];
     let headers = [
       ['Desired Lat Lngs'],
       ['Latitude', 'longitude', 'Altitude', 'Resolution'],
     ];
     console.log('blue lat lngs:', this.blueLatLngs);
-    results = [...headers, ...this.blueLatLngs];
-    let csvString = '';
-    results.forEach((rowItem, rowIndex) => {
-      rowItem.forEach((colItem, colindex) => {
-        csvString += colItem + ',';
-      });
-      csvString += '\r\n';
-    });
-    csvString = 'data:application/csv,' + encodeURIComponent(csvString);
-    let x = document.createElement('A');
-    x.setAttribute('href', csvString);
-    let dateString = new Date().toLocaleString();
-    x.setAttribute('download', 'latlngs_' + dateString + '.csv');
-    document.body.appendChild(x);
-    x.click();
+    // results = [...headers, ...this.blueLatLngs];
+    // let csvString = '';
+    // results.forEach((rowItem, rowIndex) => {
+    //   rowItem.forEach((colItem, colindex) => {
+    //     csvString += colItem + ',';
+    //   });
+    //   csvString += '\r\n';
+    // });
+    // csvString = 'data:application/csv,' + encodeURIComponent(csvString);
+    // let x = document.createElement('A');
+    // x.setAttribute('href', csvString);
+    // let dateString = new Date().toLocaleString();
+    // x.setAttribute('download', 'latlngs_' + dateString + '.csv');
+    // document.body.appendChild(x);
+    // x.click();
   }
 
   circleClicked(event: any) {
