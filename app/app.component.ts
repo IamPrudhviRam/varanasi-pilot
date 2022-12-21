@@ -7,6 +7,7 @@ import { default as varanasiAllGeojsons } from '../constants/varanasi_all.json';
 import { HttpClient } from '@angular/common/http';
 import { stringify } from '@angular/compiler/src/util';
 import { HttpParams } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 
 declare var google: any;
 
@@ -132,22 +133,35 @@ export class AppComponent {
     // fetch(endpoint + new URLSearchParams(paramsObj)).then((response) => {
     //   console.log('response:', response);
     // });
-    this.http.get(endpoint, { params: paramsObj }).subscribe((response) => {
-      console.log('response:', response['result']);
-      let lat = response['result'].lat;
-      let lng = response['result'].lon;
-      let altitude = response['result'].elevation;
-      let resolution = response['result'].resolution;
-      if (index && lat && lng && altitude) {
-        this.latLngText = '' + lat + ', ' + lng + ', ' + altitude;
-        let arr = [lat, lng, altitude, resolution];
-        this.blueLatLngs[index] = arr;
-      } else if (lat && lng && altitude) {
-        this.latLngText = '' + lat + ', ' + lng + ', ' + altitude;
-        let arr = [lat, lng, altitude, resolution];
-        this.blueLatLngs.push(arr);
+    this.http.get(endpoint, { params: paramsObj }).subscribe(
+      (response) => {
+        console.log('response:', response['result']);
+        let lat = response['result'].lat;
+        let lng = response['result'].lon;
+        let altitude = response['result'].elevation;
+        let resolution = response['result'].resolution;
+        if (index && lat && lng && altitude) {
+          this.latLngText = '' + lat + ', ' + lng + ', ' + altitude;
+          let arr = [lat, lng, altitude, resolution];
+          this.blueLatLngs[index] = arr;
+        } else if (lat && lng && altitude) {
+          this.latLngText = '' + lat + ', ' + lng + ', ' + altitude;
+          let arr = [lat, lng, altitude, resolution];
+          this.blueLatLngs.push(arr);
+        }
+      },
+      (error) => {
+        if (index && lat && lng) {
+          this.latLngText = '' + lat + ', ' + lng;
+          let arr = [lat, lng];
+          this.blueLatLngs[index] = arr;
+        } else if (lat && lng) {
+          this.latLngText = '' + lat + ', ' + lng;
+          let arr = [lat, lng];
+          this.blueLatLngs.push(arr);
+        }
       }
-    });
+    );
   }
 
   flattenArray(arr: Array<any>): number {
